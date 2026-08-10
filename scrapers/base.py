@@ -29,6 +29,17 @@ def safe_get(url, params=None, headers=None, timeout=REQUEST_TIMEOUT):
         logger.warning("Falha ao aceder a %s: %s", url, exc)
         return None
 
+def safe_post(url, json_body=None, headers=None, timeout=REQUEST_TIMEOUT):
+    """POST defensivo (JSON): nunca levanta excecao para fora, devolve None em erro."""
+    try:
+        resp = SESSION.post(url, json=json_body, headers=headers, timeout=timeout)
+        resp.raise_for_status()
+        return resp
+    except requests.RequestException as exc:
+        logger.warning("Falha ao aceder a %s: %s", url, exc)
+        return None
+
+
 
 def warm_up(url):
     """Visita uma pagina apenas para obter cookies de sessao validos."""
