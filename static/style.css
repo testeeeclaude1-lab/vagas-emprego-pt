@@ -120,6 +120,10 @@ select {
   margin-bottom: 16px;
 }
 
+.filter-wrap[hidden] {
+  display: none;
+}
+
 #filter-input {
   flex: 1;
   padding: 10px 14px;
