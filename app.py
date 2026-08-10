@@ -109,3 +109,23 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     debug = os.environ.get("FLASK_DEBUG", "1") == "1"
     app.run(host="0.0.0.0", port=port, debug=debug)
+
+from scrapers.net_empregos import SEARCH_URL, _find_job_links
+from scrapers.base import safe_get
+from bs4 import BeautifulSoup
+
+@app.route("/api/debug")
+def api_debug():
+    resp = safe_get(SEARCH_URL, params={"chaves": "marketing digital"})
+    if resp is None:
+        return jsonify({"error": "safe_get returned None"})
+    soup = BeautifulSoup(resp.text, "html.parser")
+    links = _find_job_links(soup)
+    return jsonify({
+        "status_code": resp.status_code,
+        "html_length": len(resp.text),
+        "html_snippet": resp.text[:1000],
+        "num_links_found": len(links),
+        "sample_hrefs": [a["href"] for a in soup.find_all("a", href=True)][:15],
+    })
+
