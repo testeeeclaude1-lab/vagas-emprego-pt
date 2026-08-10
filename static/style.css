@@ -92,6 +92,49 @@ select {
   margin-bottom: 16px;
 }
 
+.progress-wrap {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar.error {
+  background: #e0483e;
+}
+
+.filter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#filter-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.filter-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .results {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -132,16 +175,40 @@ select {
 
 .card .section-label {
   font-weight: 600;
-  font-size: 0.8rem;
-  margin-top: 4px;
-  color: var(--text);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--accent-dark);
 }
 
 .card .section-text {
   font-size: 0.88rem;
   color: var(--text);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+.card .section-text.muted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.card .section-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card .section-list li {
+  padding-left: 2px;
 }
 
 .card a.apply-link {
