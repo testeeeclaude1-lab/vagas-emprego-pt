@@ -36,13 +36,21 @@
       <button type="submit" id="search-btn">Pesquisar</button>
     </form>
 
+    <div id="progress-wrap" class="progress-wrap" hidden>
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
     <div id="status" class="status" hidden></div>
+
+    <div id="filter-wrap" class="filter-wrap" hidden>
+      <input type="search" id="filter-input" placeholder="Pesquisar por título, empresa ou local…" autocomplete="off">
+      <span id="filter-count" class="filter-count"></span>
+    </div>
 
     <section id="results" class="results"></section>
   </main>
 
   <footer>
-    <p>Fontes: Net-Empregos · ITJobs (requer chave de API gratuita). Dados apresentados tal como publicados nos sites de origem.</p>
+    <p>Fontes: Net-Empregos · ITJobs · Jooble (requerem chaves de API gratuitas para ITJobs/Jooble). Dados apresentados tal como publicados nos sites de origem. LinkedIn não está incluído — não tem API pública gratuita para pesquisa de vagas.</p>
   </footer>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
