@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesquisa de Vagas de Emprego — Portugal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Pesquisa de Vagas em Portugal</h1>
+    <p class="subtitle">Design Gráfico · Marketing Digital · Multimédia e mais</p>
+  </header>
+
+  <main>
+    <form id="search-form" class="search-bar">
+      <div class="field">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria" required>
+          <option value="" disabled selected>Escolhe uma categoria</option>
+          {% for c in categorias %}
+          <option value="{{ c.id }}">{{ c.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="zona">Zona</label>
+        <select id="zona" name="zona">
+          {% for z in zonas %}
+          <option value="{{ z.nome }}">{{ z.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" id="search-btn">Pesquisar</button>
+    </form>
+
+    <div id="status" class="status" hidden></div>
+
+    <section id="results" class="results"></section>
+  </main>
+
+  <footer>
+    <p>Fontes: Net-Empregos · ITJobs (requer chave de API gratuita). Dados apresentados tal como publicados nos sites de origem.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
