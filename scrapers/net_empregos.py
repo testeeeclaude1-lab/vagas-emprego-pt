@@ -13,7 +13,46 @@ BASE_URL = "https://www.net-empregos.com"
 SEARCH_URL = "https://www.net-empregos.com/pesquisa-empregos.asp"
 JOB_LINK_RE = re.compile(r"^/\d{5,}/[a-z0-9\-]+/?$", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{1,2}-\d{1,2}-\d{4}$")
+
+# Palavras demasiado genericas para pesquisar sozinhas (preposicoes, artigos).
+_STOPWORDS = {
+    "de", "da", "do", "das", "dos", "e", "em", "para", "com", "a", "o",
+    "as", "os", "no", "na", "nos", "nas", "um", "uma", "ou", "por",
+}
+
 _warmed_up = False
+
+
+def _expand_keywords(keywords):
+    """
+    Expande a lista de palavras-chave: para alem das frases originais,
+    acrescenta tambem as palavras individuais de cada frase (ex: "marketing
+    digital" -> tambem pesquisa "marketing" e "digital" separadamente).
+
+    Isto porque o motor de pesquisa do Net-Empregos exige que TODAS as
+    palavras da pesquisa aparecam na vaga (e uma pesquisa "E", nao "OU"),
+    por isso uma frase composta pode ser demasiado restritiva e deixar de
+    fora vagas relevantes que so tem uma das palavras.
+
+    Mantem a ordem: frases originais primeiro, depois as palavras novas
+    que ainda nao tinham aparecido, sem duplicados.
+    """
+    ordered = []
+    seen = set()
+
+    for phrase in keywords:
+        phrase_norm = phrase.strip().lower()
+        if phrase_norm and phrase_norm not in seen:
+            seen.add(phrase_norm)
+            ordered.append(phrase)
+
+    for phrase in keywords:
+        for word in phrase.strip().lower().split():
+            if len(word) > 2 and word not in _STOPWORDS and word not in seen:
+                seen.add(word)
+                ordered.append(word)
+
+    return ordered
 def _ensure_session():
     """Visita a homepage uma vez por processo para obter cookies validos
     antes de pedir a pagina de resultados (o site devolve uma pagina
@@ -104,7 +143,7 @@ def search(categoria, zona, limit=12, max_pages=2, fetch_details=True):
     _ensure_session()
     results = []
     seen_urls = set()
-    keywords = categoria.get("keywords", [categoria.get("nome", "")])
+    keywords = _expand_keywords(categoria.get("keywords", [categoria.get("nome", "")]))
     zona_nome = zona.get("nome", "")
     filtro_zona = None if zona_nome.lower().startswith("todas") else zona_nome
 
