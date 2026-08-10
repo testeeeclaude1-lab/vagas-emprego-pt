@@ -6,14 +6,39 @@ remover categorias e zonas sem tocar no resto do codigo.
 """
 
 CATEGORIAS = [
-    {"id": "design-grafico", "nome": "Design Grafico", "keywords": ["design grafico", "designer grafico"]},
-    {"id": "marketing-digital", "nome": "Marketing Digital", "keywords": ["marketing digital", "gestor de marketing digital"]},
-    {"id": "multimedia", "nome": "Multimedia", "keywords": ["multimedia", "motion design", "video editor"]},
-    {"id": "informatica", "nome": "Informatica / Programacao", "keywords": ["programador", "developer", "informatica"]},
-    {"id": "comunicacao", "nome": "Comunicacao / Social Media", "keywords": ["social media", "comunicacao", "community manager"]},
-    {"id": "fotografia", "nome": "Fotografia / Video", "keywords": ["fotografia", "videografo", "video maker"]},
-    {"id": "ux-ui", "nome": "UX/UI Design", "keywords": ["ux design", "ui design", "product designer"]},
-    {"id": "publicidade", "nome": "Publicidade", "keywords": ["publicidade", "advertising"]},
+    {"id": "design-grafico", "nome": "Design Grafico", "keywords": [
+        "design grafico", "designer grafico", "graphic designer", "design",
+        "banners", "cartazes", "flyers", "criacao de artes", "artes graficas",
+        "identidade visual", "branding", "packaging"
+    ]},
+    {"id": "marketing-digital", "nome": "Marketing Digital", "keywords": [
+        "marketing digital", "gestor de marketing", "marketing", "digital marketing",
+        "gestao de redes sociais", "campanhas publicitarias", "google ads", "meta ads",
+        "email marketing", "growth marketing"
+    ]},
+    {"id": "multimedia", "nome": "Multimedia", "keywords": [
+        "multimedia", "motion design", "video editor", "editor de video",
+        "edicao de video", "animacao", "motion graphics", "producao audiovisual"
+    ]},
+    {"id": "informatica", "nome": "Informatica / Programacao", "keywords": [
+        "programador", "developer", "informatica", "software engineer",
+        "desenvolvimento de software", "programacao", "web developer", "criacao de sites"
+    ]},
+    {"id": "comunicacao", "nome": "Comunicacao / Social Media", "keywords": [
+        "social media", "comunicacao", "community manager", "content creator",
+        "gestao de redes sociais", "criacao de conteudos", "copywriting"
+    ]},
+    {"id": "fotografia", "nome": "Fotografia / Video", "keywords": [
+        "fotografia", "videografo", "video maker", "fotografo",
+        "sessoes fotograficas", "edicao de fotos", "cobertura de eventos"
+    ]},
+    {"id": "ux-ui", "nome": "UX/UI Design", "keywords": [
+        "ux design", "ui design", "product designer", "ux", "ui",
+        "design de interfaces", "prototipos", "figma"
+    ]},
+    {"id": "publicidade", "nome": "Publicidade", "keywords": [
+        "publicidade", "advertising", "criacao publicitaria", "campanhas de publicidade"
+    ]},
 ]
 
 ZONAS = [
@@ -41,7 +66,7 @@ ZONAS = [
     {"nome": "Remoto / Internacional", "itjobs_id": 29},
 ]
 
-MAX_RESULTADOS_POR_FONTE = 12
+MAX_RESULTADOS_POR_FONTE = 30
 
 USER_AGENT = (
     "Mozilla/5.0 (compatible; PesquisaVagasPT/1.0; "
