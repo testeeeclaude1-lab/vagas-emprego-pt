@@ -7,12 +7,12 @@ remover categorias e zonas sem tocar no resto do codigo.
 
 CATEGORIAS = [
     {"id": "design-grafico", "nome": "Design Grafico", "keywords": [
-        "design grafico", "designer grafico", "graphic designer", "design",
+        "design", "design grafico", "designer grafico", "graphic designer",
         "banners", "cartazes", "flyers", "criacao de artes", "artes graficas",
         "identidade visual", "branding", "packaging"
     ]},
     {"id": "marketing-digital", "nome": "Marketing Digital", "keywords": [
-        "marketing digital", "gestor de marketing", "marketing", "digital marketing",
+        "marketing", "marketing digital", "gestor de marketing", "digital marketing",
         "gestao de redes sociais", "campanhas publicitarias", "google ads", "meta ads",
         "email marketing", "growth marketing"
     ]},
@@ -21,11 +21,11 @@ CATEGORIAS = [
         "edicao de video", "animacao", "motion graphics", "producao audiovisual"
     ]},
     {"id": "informatica", "nome": "Informatica / Programacao", "keywords": [
-        "programador", "developer", "informatica", "software engineer",
+        "informatica", "programador", "developer", "software engineer",
         "desenvolvimento de software", "programacao", "web developer", "criacao de sites"
     ]},
     {"id": "comunicacao", "nome": "Comunicacao / Social Media", "keywords": [
-        "social media", "comunicacao", "community manager", "content creator",
+        "comunicacao", "social media", "community manager", "content creator",
         "gestao de redes sociais", "criacao de conteudos", "copywriting"
     ]},
     {"id": "fotografia", "nome": "Fotografia / Video", "keywords": [
