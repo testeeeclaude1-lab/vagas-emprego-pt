@@ -127,5 +127,10 @@ def api_debug():
         "html_snippet": resp.text[:1000],
         "num_links_found": len(links),
         "sample_hrefs": [a["href"] for a in soup.find_all("a", href=True)][:15],
+                "total_anchors": len(soup.find_all("a", href=True)),
+        "contains_known_job_id": "15835572" in resp.text,
+        "contains_pesquisa_empregos": "pesquisa-empregos" in resp.text,
+        "body_tail": resp.text[-1500:],
+
     })
 
