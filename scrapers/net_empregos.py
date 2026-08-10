@@ -20,7 +20,25 @@ _STOPWORDS = {
     "as", "os", "no", "na", "nos", "nas", "um", "uma", "ou", "por",
 }
 
+# Termos que indicam que a vaga se aplica ao pais inteiro (nao a uma zona
+# especifica), pelo que deve aparecer mesmo quando o utilizador filtra por
+# uma zona concreta (ex: Braga).
+_NATIONWIDE_MARKERS = (
+    "todas as zonas", "todo o pais", "todo o país", "nacional",
+    "remoto", "remote", "portugal inteiro",
+)
+
 _warmed_up = False
+
+
+def _is_nationwide(location):
+    """Devolve True se a localizacao indicar que a vaga se aplica a todo o
+    pais (ex: "( Todas as Zonas )"), nao devendo ser excluida por um filtro
+    de zona especifica."""
+    if not location:
+        return False
+    loc = location.lower()
+    return any(marker in loc for marker in _NATIONWIDE_MARKERS)
 
 
 def _expand_keywords(keywords):
@@ -30,12 +48,12 @@ def _expand_keywords(keywords):
     digital" -> tambem pesquisa "marketing" e "digital" separadamente).
 
     Isto porque o motor de pesquisa do Net-Empregos exige que TODAS as
-    palavras da pesquisa aparecam na vaga (e uma pesquisa "E", nao "OU"),
+    palavras da pesquisa apareçam na vaga (é uma pesquisa "E", nao "OU"),
     por isso uma frase composta pode ser demasiado restritiva e deixar de
-    fora vagas relevantes que so tem uma das palavras.
+    fora vagas relevantes que só têm uma das palavras.
 
-    Mantem a ordem: frases originais primeiro, depois as palavras novas
-    que ainda nao tinham aparecido, sem duplicados.
+    Mantém a ordem: frases originais primeiro, depois as palavras novas
+    que ainda não tinham aparecido, sem duplicados.
     """
     ordered = []
     seen = set()
@@ -53,6 +71,8 @@ def _expand_keywords(keywords):
                 ordered.append(word)
 
     return ordered
+
+
 def _ensure_session():
     """Visita a homepage uma vez por processo para obter cookies validos
     antes de pedir a pagina de resultados (o site devolve uma pagina
@@ -61,6 +81,8 @@ def _ensure_session():
     if not _warmed_up:
         warm_up(BASE_URL + "/")
         _warmed_up = True
+
+
 def _find_job_links(soup):
     seen = set()
     links = []
@@ -73,6 +95,8 @@ def _find_job_links(soup):
                 seen.add(full_url)
                 links.append((full_url, a))
     return links
+
+
 def _extract_card_fields(anchor):
     container = anchor
     for _ in range(6):
@@ -84,6 +108,8 @@ def _extract_card_fields(anchor):
         if len(text_items) >= 2:
             return container, text_items
     return container, []
+
+
 def _parse_card(url, anchor):
     title = normalize(anchor.get_text(" "))
     container, items = _extract_card_fields(anchor)
@@ -116,6 +142,8 @@ def _parse_card(url, anchor):
         "url": url,
         "published_at": date,
     }
+
+
 def _fetch_job_detail(url):
     resp = safe_get(url)
     if resp is None:
@@ -132,13 +160,17 @@ def _fetch_job_detail(url):
     if not best_text:
         best_text = normalize(soup.get_text(" "))
     return best_text
-def search(categoria, zona, limit=12, max_pages=2, fetch_details=True):
+
+
+def search(categoria, zona, limit=12, max_pages=6, fetch_details=True):
     """
     categoria: dict de config.CATEGORIAS
     zona: dict de config.ZONAS
 
-    Percorre TODAS as palavras-chave da categoria (nao so a primeira),
-    juntando os resultados sem duplicados, ate atingir o limite.
+    Percorre TODAS as palavras-chave da categoria (nao so a primeira) e,
+    para cada uma, todas as paginas de resultados ate ``max_pages`` (ou ate
+    a pagina deixar de ter vagas), juntando os resultados sem duplicados,
+    ate atingir o limite total pedido.
     """
     _ensure_session()
     results = []
@@ -171,11 +203,12 @@ def search(categoria, zona, limit=12, max_pages=2, fetch_details=True):
 
                 card = _parse_card(url, anchor)
 
-                if filtro_zona and card["location"]:
-                    if filtro_zona.lower() not in card["location"].lower():
+                if filtro_zona and not _is_nationwide(card["location"]):
+                    if card["location"]:
+                        if filtro_zona.lower() not in card["location"].lower():
+                            continue
+                    else:
                         continue
-                elif filtro_zona and not card["location"]:
-                    continue
 
                 seen_urls.add(url)
                 results.append(card)
