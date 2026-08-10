@@ -10,13 +10,26 @@ pesquisa).
 import re
 from bs4 import BeautifulSoup
 
-from .base import safe_get, normalize
+from .base import safe_get, normalize, warm_up
 
 SOURCE_NAME = "Net-Empregos"
+BASE_URL = "https://www.net-empregos.com"
 SEARCH_URL = "https://www.net-empregos.com/pesquisa-empregos.asp"
 
 JOB_LINK_RE = re.compile(r"^/\d{5,}/[a-z0-9\-]+/?$", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{1,2}-\d{1,2}-\d{4}$")
+
+_warmed_up = False
+
+
+def _ensure_session():
+    """Visita a homepage uma vez por processo para obter cookies validos
+    antes de pedir a pagina de resultados (o site devolve uma pagina
+    diferente - login/homepage - sem uma sessao valida)."""
+    global _warmed_up
+    if not _warmed_up:
+        warm_up(BASE_URL + "/")
+        _warmed_up = True
 
 
 def _find_job_links(soup):
@@ -24,9 +37,9 @@ def _find_job_links(soup):
     links = []
     for a in soup.find_all("a", href=True):
         href = a["href"]
-        path = href.replace("https://www.net-empregos.com", "")
+        path = href.replace(BASE_URL, "")
         if JOB_LINK_RE.match(path):
-            full_url = "https://www.net-empregos.com" + path if path.startswith("/") else href
+            full_url = BASE_URL + path if path.startswith("/") else href
             if full_url not in seen:
                 seen.add(full_url)
                 links.append((full_url, a))
@@ -108,6 +121,8 @@ def _fetch_job_detail(url):
 
 
 def search(categoria, zona, limit=12, max_pages=2, fetch_details=True):
+    _ensure_session()
+
     results = []
     keywords = categoria.get("keywords", [categoria.get("nome", "")])
     query = keywords[0]
